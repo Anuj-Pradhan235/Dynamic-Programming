@@ -1,0 +1,49 @@
+#include <bits/stdc++.h> 
+#define MOD 1000000007
+int solveRec(int n,int steps){
+    //base case
+    if(steps==n)return 1;
+    if(steps>n)return 0;
+    return solveRec(n,steps+1)+solveRec(n,steps+2);
+}
+int solveMem(int n,int steps,vector<int>&dp){
+    if(steps==n)return 1;
+    if(steps>n)return 0;
+    if(dp[steps]!=-1)return dp[steps]%MOD;
+    return dp[steps]=(solveMem(n,steps+1,dp)%MOD+solveMem(n,steps+2,dp)%MOD)%MOD;
+}
+int solveRec2(int n){
+    if(n==0)return 1;
+    if(n<0)return 0;
+    return solveRec2(n-1)+solveRec2(n-2);
+}
+int solveMem2(int n,vector<int>&dp){
+    if(n==0)return 1;
+    if(n<0)return 0;
+    if(dp[n]!=-1)return dp[n];
+    return dp[n]=(solveMem2(n-1,dp)%MOD+solveMem2(n-2,dp)%MOD)%MOD;
+}
+int solveTab(int n){
+    vector<int>dp(n+1,-1);
+    dp[0]=1;
+    dp[1]=1;
+    for(int i=2;i<=n;i++){
+        dp[i]=(dp[i-1]%MOD+dp[i-2]%MOD)%MOD;
+    }
+    return dp[n];
+}
+int solveSO(int n){
+    int prev2=1;
+    int prev1=1;
+    for(int i=2;i<=n;i++){
+        int curr=(prev2%MOD+prev1%MOD)%MOD;
+        prev2=prev1;
+        prev1=curr;
+    }
+    return prev1;
+}
+int countDistinctWays(int nStairs) {
+    //  Write your code here.
+    vector<int>dp(nStairs+1,-1);
+    return solveSO(nStairs);
+}
